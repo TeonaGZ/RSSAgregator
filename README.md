@@ -4,4 +4,4 @@
 
 
 ### Link to app
-[RSS aggregator](https://frontend-project-11-t2q6.vercel.app/)
+[RSS aggregator](https://frontend-project-11-delta-peach.vercel.app/)
