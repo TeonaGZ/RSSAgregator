@@ -1,6 +1,6 @@
 import onChange from 'on-change';
 
-const renderFeeds = (elements, state) => {
+const renderFeeds = (elements, state, i18n) => {
   elements.feedsContainer.innerHTML = '';
 
   const divEl = document.createElement('div');
@@ -9,8 +9,12 @@ const renderFeeds = (elements, state) => {
 
   const titleDivEl = document.createElement('div');
   titleDivEl.classList.add('card-body');
-  titleDivEl.innerHTML = '<h2 class="card-title h4">Фиды</h2>';
   divEl.append(titleDivEl);
+
+  const h2 = document.createElement('h2');
+  h2.classList.add('card-title', 'h4');
+  h2.textContent = i18n.t('feeds');
+  titleDivEl.append(h2);
 
   const ulEl = document.createElement('ul');
   ulEl.classList.add('list-group', 'border-0', 'rounded-0');
@@ -38,18 +42,18 @@ const renderFeeds = (elements, state) => {
   divEl.append(ulEl);
 };
 
-const renderError = (elements, error) => {
+const renderError = (elements, error, i18n) => {
   elements.feedbackContainer.textContent = '';
-  if (error !== []) {
+  if (error !== null) {
     elements.feedbackContainer.classList.remove('text-success');
     elements.feedbackContainer.classList.add('text-danger');
-    elements.feedbackContainer.textContent = `${error}`;
+    elements.feedbackContainer.textContent = i18n.t(error);
   } else {
-    elements.feedbackContainer.textContent = 'RSS успешно загружен';
+    elements.feedbackContainer.textContent = i18n.t('form.success');
   }
 };
 
-const renderStatus = (elements, status) => {
+const renderStatus = (elements, status, i18n) => {
   switch (status) {
     case 'filling':
       elements.form.focus();
@@ -65,20 +69,20 @@ const renderStatus = (elements, status) => {
       elements.form.focus();
       elements.feedbackContainer.classList.remove('text-danger');
       elements.feedbackContainer.classList.add('text-success');
-      elements.feedbackContainer.textContent = 'RSS успешно загружен';
+      elements.feedbackContainer.textContent = i18n.t('form.success');
       break;
     default:
       throw new Error(`Unknown process state: ${status}`);
   }
 };
 
-export default (elements, state) => onChange(state, (path, value) => {
+export default (elements, state, i18n) => onChange(state, (path, value) => {
   switch (path) {
     case 'feeds':
-      renderFeeds(elements, state);
+      renderFeeds(elements, state, i18n);
       break;
     case 'formState.errors':
-      renderError(elements, value);
+      renderError(elements, value, i18n);
       break;
     case 'formState.valid':
       if (!value) {
@@ -88,7 +92,7 @@ export default (elements, state) => onChange(state, (path, value) => {
       elements.formInput.classList.remove('is-invalid');
       break;
     case 'formState.status':
-      renderStatus(elements, value);
+      renderStatus(elements, value, i18n);
       break;
     default:
       throw new Error(`Unknown path: ${path}`);
