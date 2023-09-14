@@ -1,6 +1,7 @@
-import * as yup from 'yup';
 import i18next from 'i18next';
 import ru from './locales/ru.js';
+import validateUrl from './utilities/validator.js';
+import axios from 'axios';
 import watch from './view.js';
 
 export default () => {
@@ -35,29 +36,13 @@ export default () => {
 
   const watchedState = watch(elements, initialState, i18n);
 
-  yup.setLocale({
-    mixed: {
-      required: i18n.t('form.errors.required'),
-      notOneOf: i18n.t('form.errors.notUniqueUrl'),
-    },
-    string: {
-      url: i18n.t('form.errors.invalidUrl'),
-    },
-  });
-
-  const formSchema = (state) => yup.string()
-    .url()
-    .required()
-    .notOneOf(state.feeds)
-    .trim();
-
   elements.form.addEventListener('submit', (e) => {
     e.preventDefault();
     watchedState.formState.status = 'filling';
     const formData = new FormData(e.target);
     const url = formData.get('url');
 
-    formSchema(watchedState).validate(url)
+    validateUrl(url, watchedState, i18n)
       .then(() => {
         watchedState.formState.status = 'processing';
         watchedState.formState.errors = null;
