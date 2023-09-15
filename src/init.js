@@ -1,8 +1,10 @@
 import i18next from 'i18next';
+import _ from 'lodash';
 import ru from './locales/ru.js';
 import validateUrl from './utilities/validator.js';
-import axios from 'axios';
 import watch from './view.js';
+import fetchData from './utilities/fetch.js';
+import parsedData from './utilities/parser.js';
 
 export default () => {
   const elements = {
@@ -10,8 +12,8 @@ export default () => {
     formInput: document.getElementById('url-input'),
     formButton: document.querySelector('.rss-form button'),
     feedbackContainer: document.querySelector('.feedback'),
-    postsContainer: document.querySelector('.posts'),
-    feedsContainer: document.querySelector('.feeds'),
+    feeds: document.querySelector('.feeds'),
+    posts: document.querySelector('.posts'),
   };
 
   const defaultLanguage = 'ru';
@@ -41,20 +43,27 @@ export default () => {
     watchedState.formState.status = 'filling';
     const formData = new FormData(e.target);
     const url = formData.get('url');
+    const urlList = watchedState.feeds.map((feed) => feed.url);
 
-    validateUrl(url, watchedState, i18n)
+    validateUrl(url, urlList, i18n)
       .then(() => {
         watchedState.formState.status = 'processing';
         watchedState.formState.errors = null;
-        console.log('!!', watchedState.formState);
 
-        console.log('url', url);
-        watchedState.feeds.push(url);
+        return fetchData(url);
+      })
+      .then(({ data }) => {
+        const { feed, posts } = parsedData(data.contents);
+
+        const newFeed = { ...feed, id: _.uniqueId(), url };
+        const newPosts = posts.map((post) => ({ ...post, feedId: newFeed.id, id: _.uniqueId('post') }));
+
+        watchedState.feeds.unshift(newFeed);
+        watchedState.posts.unshift(...newPosts);
         watchedState.formState.status = 'success';
       })
       .catch((err) => {
         watchedState.formState.status = 'filling';
-        console.log('errrrr', err.message);
         watchedState.formState.errors = err.message;
         watchedState.formState.valid = false;
       });

@@ -1,6 +1,6 @@
 import * as yup from 'yup';
 
-export default (url, initialState, i18n) => {
+export default (url, urlList, i18n) => {
   yup.setLocale({
     mixed: {
       required: i18n.t('form.errors.required'),
@@ -15,7 +15,7 @@ export default (url, initialState, i18n) => {
     .string()
     .url()
     .required()
-    .notOneOf(initialState.feeds)
+    .notOneOf(urlList)
     .trim();
 
   return formSchema.validate(url);
