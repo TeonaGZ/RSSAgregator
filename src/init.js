@@ -4,7 +4,8 @@ import ru from './locales/ru.js';
 import validateUrl from './utilities/validator.js';
 import watch from './view.js';
 import fetchData from './utilities/fetch.js';
-import parsedData from './utilities/parser.js';
+import parseData from './utilities/parser.js';
+import updatePosts from './utilities/updater.js';
 
 export default () => {
   const elements = {
@@ -53,13 +54,13 @@ export default () => {
         return fetchData(url);
       })
       .then(({ data }) => {
-        const { feed, posts } = parsedData(data.contents);
+        const { feed, posts } = parseData(data.contents);
 
         const newFeed = { ...feed, id: _.uniqueId(), url };
         const newPosts = posts.map((post) => ({ ...post, feedId: newFeed.id, id: _.uniqueId('post') }));
 
-        watchedState.feeds.unshift(newFeed);
-        watchedState.posts.unshift(...newPosts);
+        watchedState.feeds.push(newFeed);
+        watchedState.posts.push(...newPosts);
         watchedState.formState.status = 'success';
       })
       .catch((err) => {
@@ -68,4 +69,5 @@ export default () => {
         watchedState.formState.valid = false;
       });
   });
+  updatePosts(watchedState);
 };
