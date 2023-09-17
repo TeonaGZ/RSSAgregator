@@ -27,7 +27,6 @@ const renderContainer = (elements, type, i18n) => {
 
 const renderFeeds = (elements, state, i18n) => {
   const feedsContainer = renderContainer(elements, 'feeds', i18n);
-
   const ulEl = feedsContainer.querySelector('.list-group');
 
   state.feeds.forEach((feed) => {
@@ -49,7 +48,6 @@ const renderFeeds = (elements, state, i18n) => {
 
 const renderPosts = (elements, state, i18n) => {
   const postsContainer = renderContainer(elements, 'posts', i18n);
-
   const ulEl = postsContainer.querySelector('.list-group');
 
   state.posts.forEach((post) => {
@@ -57,9 +55,10 @@ const renderPosts = (elements, state, i18n) => {
     liEl.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-start', 'border-0', 'border-end-0');
     ulEl.prepend(liEl);
 
+    const fwClass = state.uiState.visitedPosts.includes(post.id) ? ['fw-normal', 'link-secondary'] : 'fw-bold';
     const aEl = document.createElement('a');
     aEl.setAttribute('href', post.url);
-    aEl.classList.add('fw-bold');
+    aEl.classList.add(...fwClass);
     aEl.setAttribute('data-id', post.id);
     aEl.setAttribute('target', '_blank');
     aEl.setAttribute('rel', 'noopener noreferrer');
@@ -75,6 +74,29 @@ const renderPosts = (elements, state, i18n) => {
 
     liEl.append(aEl, btnEl);
   });
+};
+
+const renderVisitedPosts = (elements, state) => {
+  const postsId = [...state.uiState.visitedPosts];
+  console.log('postsId', postsId);
+  const currentId = postsId[postsId.length - 1];
+  console.log('currentId', currentId);
+
+  const currentUrl = document.querySelector(`a[data-id=${currentId}]`);
+  console.log('currentUrl', currentUrl);
+
+  currentUrl.classList.remove('fw-bold');
+  currentUrl.classList.add('fw-normal');
+  console.log('state', state);
+
+  const currentPost = state.posts.find((post) => post.id === currentId);
+
+  const { title, description, url } = currentPost;
+  const { modal } = elements;
+
+  modal.title.textContent = title;
+  modal.body.textContent = description;
+  modal.btn.setAttribute('href', url);
 };
 
 const renderError = (elements, error, i18n) => {
@@ -118,6 +140,9 @@ export default (elements, state, i18n) => onChange(state, (path, value) => {
       break;
     case 'posts':
       renderPosts(elements, state, i18n);
+      break;
+    case 'uiState.visitedPosts':
+      renderVisitedPosts(elements, state);
       break;
     case 'formState.errors':
       renderError(elements, value, i18n);

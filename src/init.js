@@ -15,6 +15,11 @@ export default () => {
     feedbackContainer: document.querySelector('.feedback'),
     feeds: document.querySelector('.feeds'),
     posts: document.querySelector('.posts'),
+    modal: {
+      title: document.querySelector('.modal-title'),
+      body: document.querySelector('.modal-body'),
+      btn: document.querySelector('.modal-footer > .btn-primary'),
+    },
   };
 
   const defaultLanguage = 'ru';
@@ -35,6 +40,9 @@ export default () => {
     },
     feeds: [],
     posts: [],
+    uiState: {
+      visitedPosts: [],
+    },
   };
 
   const watchedState = watch(elements, initialState, i18n);
@@ -69,5 +77,14 @@ export default () => {
         watchedState.formState.valid = false;
       });
   });
+
+  elements.posts.addEventListener('click', ({ target }) => {
+    if (target.tagName === 'A' || target.tagName === 'BUTTON') {
+      const { id } = target.dataset;
+      watchedState.uiState.visitedPosts.push(id);
+      console.log('visited', watchedState.uiState.visitedPosts);
+    }
+  });
+
   updatePosts(watchedState);
 };

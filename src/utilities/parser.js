@@ -14,6 +14,7 @@ export default (data) => {
     .map((item) => (
       {
         title: item.querySelector('title').textContent,
+        description: item.querySelector('description').textContent,
         url: item.querySelector('link').textContent,
       }
     ));
