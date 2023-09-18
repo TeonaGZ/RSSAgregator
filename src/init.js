@@ -82,7 +82,6 @@ export default () => {
     if (target.tagName === 'A' || target.tagName === 'BUTTON') {
       const { id } = target.dataset;
       watchedState.uiState.visitedPosts.push(id);
-      console.log('visited', watchedState.uiState.visitedPosts);
     }
   });
 

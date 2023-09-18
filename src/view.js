@@ -78,16 +78,11 @@ const renderPosts = (elements, state, i18n) => {
 
 const renderVisitedPosts = (elements, state) => {
   const postsId = [...state.uiState.visitedPosts];
-  console.log('postsId', postsId);
   const currentId = postsId[postsId.length - 1];
-  console.log('currentId', currentId);
-
   const currentUrl = document.querySelector(`a[data-id=${currentId}]`);
-  console.log('currentUrl', currentUrl);
 
   currentUrl.classList.remove('fw-bold');
   currentUrl.classList.add('fw-normal');
-  console.log('state', state);
 
   const currentPost = state.posts.find((post) => post.id === currentId);
 
@@ -99,12 +94,12 @@ const renderVisitedPosts = (elements, state) => {
   modal.btn.setAttribute('href', url);
 };
 
-const renderError = (elements, error, i18n) => {
+const renderError = (elements, value, i18n) => {
   elements.feedbackContainer.textContent = '';
-  if (error !== null) {
+  if (value !== null) {
     elements.feedbackContainer.classList.remove('text-success');
     elements.feedbackContainer.classList.add('text-danger');
-    elements.feedbackContainer.textContent = i18n.t(error);
+    elements.feedbackContainer.textContent = i18n.t(`form.errors.${value}`);
   } else {
     elements.feedbackContainer.textContent = i18n.t('form.success');
   }
