@@ -26,8 +26,8 @@ const renderContainer = (elements, type, i18n) => {
 };
 
 const renderFeeds = (elements, state, i18n) => {
-  const feedsContainer = renderContainer(elements, 'feeds', i18n);
-  const ulEl = feedsContainer.querySelector('.list-group');
+  const feedsView = renderContainer(elements, 'feeds', i18n);
+  const ulEl = feedsView.querySelector('.list-group');
 
   state.feeds.forEach((feed) => {
     const liEl = document.createElement('li');
@@ -47,8 +47,8 @@ const renderFeeds = (elements, state, i18n) => {
 };
 
 const renderPosts = (elements, state, i18n) => {
-  const postsContainer = renderContainer(elements, 'posts', i18n);
-  const ulEl = postsContainer.querySelector('.list-group');
+  const postsView = renderContainer(elements, 'posts', i18n);
+  const ulEl = postsView.querySelector('.list-group');
 
   state.posts.forEach((post) => {
     const liEl = document.createElement('li');
