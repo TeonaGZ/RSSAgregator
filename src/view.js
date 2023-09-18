@@ -55,7 +55,7 @@ const renderPosts = (elements, state, i18n) => {
     liEl.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-start', 'border-0', 'border-end-0');
     ulEl.prepend(liEl);
 
-    const fwClass = state.uiState.visitedPosts.includes(post.id) ? ['fw-normal', 'link-secondary'] : 'fw-bold';
+    const fwClass = state.uiState.visitedPosts.includes(post.id) ? ['fw-normal', 'link-secondary'] : ['fw-bold'];
     const aEl = document.createElement('a');
     aEl.setAttribute('href', post.url);
     aEl.classList.add(...fwClass);
