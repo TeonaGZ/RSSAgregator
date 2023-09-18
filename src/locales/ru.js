@@ -10,7 +10,7 @@ export default {
         required: 'Не должно быть пустым',
         notUniqueUrl: 'RSS уже существует',
         notValidRss: 'Ресурс не содержит валидный RSS',
-        networkError: 'Ошибка сети',
+        'Network Error': 'Ошибка сети',
       },
     },
     feedsTitle: 'Фиды',
