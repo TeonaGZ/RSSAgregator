@@ -6,8 +6,8 @@ export default {
     form: {
       success: 'RSS успешно загружен',
       errors: {
-        invalidUrl: 'Url должен быть валидным',
-        required: 'Это поле должно быть заполнено',
+        invalidUrl: 'Ссылка должна быть валидным URL',
+        required: 'Не должно быть пустым',
         notUniqueUrl: 'RSS уже существует',
         notValidRss: 'Ресурс не содержит валидный RSS',
         networkError: 'Ошибка сети',
