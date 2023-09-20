@@ -2,7 +2,7 @@
 
 ### Hexlet tests and linter status:
 [![Actions Status](https://github.com/TeonaGZ/frontend-project-11/workflows/hexlet-check/badge.svg)](https://github.com/TeonaGZ/frontend-project-11/actions)
-[![Actions Status](https://github.com/TeonaGZ/frontend-project-11/workflows/nodejs/badge.svg)](https://github.com/TeonaGZ/frontend-project-11/actions)
+[![Node CI](https://github.com/TeonaGZ/frontend-project-11/actions/workflows/nodejs.yml/badge.svg)](https://github.com/TeonaGZ/frontend-project-11/actions/workflows/nodejs.yml)
 [![Maintainability](https://api.codeclimate.com/v1/badges/e7e6936e2e2f3a45cb02/maintainability)](https://codeclimate.com/github/TeonaGZ/frontend-project-11/maintainability)
 
 ### Description
