@@ -99,7 +99,7 @@ const renderError = (elements, value, i18n) => {
   if (value !== null) {
     elements.feedbackContainer.classList.remove('text-success');
     elements.feedbackContainer.classList.add('text-danger');
-    elements.feedbackContainer.textContent = i18n.t(`form.errors.${value}`);
+    elements.feedbackContainer.textContent = i18n.t(`${value}`);
   } else {
     elements.feedbackContainer.textContent = i18n.t('form.success');
   }

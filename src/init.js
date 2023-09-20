@@ -54,14 +54,21 @@ export default () => {
     const url = formData.get('url');
     const urlList = watchedState.feeds.map((feed) => feed.url);
 
-    validateUrl(url, urlList, i18n)
-      .then(() => {
-        watchedState.formState.status = 'processing';
+    validateUrl(url, urlList)
+      .then((error) => {
+        // if (error) срабатывает некорректно, когда валидация проходит без ошибок
+        if (error !== null) {
+          watchedState.formState.errors = error.message;
+          console.log('state', watchedState);
+          return;
+        }
         watchedState.formState.errors = null;
-
-        return fetchData(url);
+        console.log('fetchData', fetchData(url));
+        fetchData(url);
       })
       .then(({ data }) => {
+        console.log('data', { data });
+
         const { feed, posts } = parseData(data.contents);
 
         const newFeed = { ...feed, id: _.uniqueId(), url };
@@ -71,9 +78,8 @@ export default () => {
         watchedState.posts.push(...newPosts);
         watchedState.formState.status = 'success';
       })
-      .catch((err) => {
+      .catch(() => {
         watchedState.formState.status = 'filling';
-        watchedState.formState.errors = err.message;
         watchedState.formState.valid = false;
       });
   });
