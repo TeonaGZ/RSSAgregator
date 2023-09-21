@@ -47,10 +47,10 @@ const rssDownload = (url, state) => {
       state.posts.push(...newPosts);
       state.formState.status = 'success';
     })
-    .catch((err) => {
+    .catch((error) => {
       state.formState.status = 'filling';
       state.formState.valid = false;
-      state.formState.errors = err;
+      state.formState.errors = error.message;
     });
 };
 
