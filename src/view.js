@@ -55,7 +55,7 @@ const renderPosts = (elements, state, i18n) => {
     liEl.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-start', 'border-0', 'border-end-0');
     ulEl.prepend(liEl);
 
-    const fwClass = state.uiState.visitedPosts.includes(post.id) ? ['fw-normal', 'link-secondary'] : ['fw-bold'];
+    const fwClass = state.uiState.visitedPosts.has(post.id) ? ['fw-normal', 'link-secondary'] : ['fw-bold'];
     const aEl = document.createElement('a');
     aEl.setAttribute('href', post.url);
     aEl.classList.add(...fwClass);
@@ -95,13 +95,13 @@ const renderVisitedPosts = (elements, state) => {
 };
 
 const renderError = (elements, value, i18n) => {
-  elements.feedbackContainer.textContent = '';
+  elements.feedback.textContent = '';
   if (value !== null) {
-    elements.feedbackContainer.classList.remove('text-success');
-    elements.feedbackContainer.classList.add('text-danger');
-    elements.feedbackContainer.textContent = i18n.t(`${value}`);
+    elements.feedback.classList.remove('text-success');
+    elements.feedback.classList.add('text-danger');
+    elements.feedback.textContent = i18n.t(`form.errors.${value}`);
   } else {
-    elements.feedbackContainer.textContent = i18n.t('form.success');
+    elements.feedback.textContent = i18n.t('form.success');
   }
 };
 
@@ -110,18 +110,18 @@ const renderStatus = (elements, status, i18n) => {
     case 'filling':
       elements.form.focus();
       break;
-    case 'processing':
-      elements.form.readOnly = true;
-      elements.form.disabled = true;
-      break;
+    // case 'processing':
+    //   elements.form.readOnly = true;
+    //   elements.form.disabled = true;
+    //   break;
     case 'success':
       elements.form.readOnly = false;
       elements.form.disabled = false;
       elements.form.reset();
       elements.form.focus();
-      elements.feedbackContainer.classList.remove('text-danger');
-      elements.feedbackContainer.classList.add('text-success');
-      elements.feedbackContainer.textContent = i18n.t('form.success');
+      elements.feedback.classList.remove('text-danger');
+      elements.feedback.classList.add('text-success');
+      elements.feedback.textContent = i18n.t('form.success');
       break;
     default:
       throw new Error(`Unknown process state: ${status}`);

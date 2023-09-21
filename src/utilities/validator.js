@@ -1,9 +1,6 @@
 import * as yup from 'yup';
-import { customMessages } from '../locales/customMessage.js';
 
 export default (url, urlList) => {
-  yup.setLocale(customMessages);
-
   const formSchema = yup
     .string()
     .url()
