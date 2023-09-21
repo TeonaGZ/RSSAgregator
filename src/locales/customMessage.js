@@ -1,4 +1,4 @@
-export const customMessages = {
+const customMessages = {
   mixed: {
     required: 'required',
     notOneOf: 'notUniqueUrl',
@@ -7,3 +7,5 @@ export const customMessages = {
     url: 'invalidUrl',
   },
 };
+
+export default customMessages;

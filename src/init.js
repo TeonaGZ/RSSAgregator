@@ -1,6 +1,6 @@
 import i18next from 'i18next';
 import * as yup from 'yup';
-import { customMessages } from './locales/customMessage.js';
+import customMessages from './locales/customMessage.js';
 import ru from './locales/ru.js';
 import validateUrl from './utilities/validator.js';
 import watch from './view.js';
