@@ -13,7 +13,8 @@ export const getProxy = (url) => {
   return proxyUrl.toString();
 };
 
-export const fetchData = (proxyUrl) => {
+export const fetchData = (proxyUrl, state) => {
+  state.formState.status = 'processing';
   const instance = axios.create();
   return instance.get(proxyUrl, {
     timeout: axiosTimeout,
@@ -22,7 +23,7 @@ export const fetchData = (proxyUrl) => {
 
 export const rssDownload = (url, state) => {
   const proxyUrl = getProxy(url);
-  fetchData(proxyUrl)
+  fetchData(proxyUrl, state)
     .then(({ data }) => {
       const { feed, posts } = parseData(data.contents);
 
@@ -42,7 +43,7 @@ export const rssDownload = (url, state) => {
 
 export const rssUpdate = (state) => {
   const { feeds } = state;
-  const activeFeeds = feeds.map((feed) => fetchData(getProxy(feed.url))
+  const activeFeeds = feeds.map((feed) => fetchData(getProxy(feed.url), state)
     .then(({ data }) => {
       const { posts } = parseData(data.contents);
       const currentUrls = posts.map((post) => post.url);

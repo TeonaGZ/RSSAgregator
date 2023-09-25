@@ -11,6 +11,7 @@ export default {
         notUniqueUrl: 'RSS уже существует',
         notValidRss: 'Ресурс не содержит валидный RSS',
         'Network Error': 'Ошибка сети',
+        unknowError: 'Неизвестная ошибка',
       },
     },
     feedsTitle: 'Фиды',

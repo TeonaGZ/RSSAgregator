@@ -24,7 +24,6 @@ export default () => {
   const initialState = {
     formState: {
       status: 'filling',
-      valid: true,
       errors: null,
     },
     feeds: [],
@@ -59,10 +58,8 @@ export default () => {
           .then((error) => {
             if (error !== null) {
               watchedState.formState.errors = error;
-              watchedState.formState.valid = false;
               return;
             }
-            watchedState.formState.valid = true;
             watchedState.formState.errors = null;
             rssDownload(url, watchedState);
           });

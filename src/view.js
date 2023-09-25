@@ -101,8 +101,10 @@ const renderError = (elements, value, i18n) => {
     elements.feedback.classList.remove('text-success');
     elements.feedback.classList.add('text-danger');
     elements.feedback.textContent = i18n.t(`form.errors.${value}`);
+    elements.formInput.classList.add('is-invalid');
   } else {
     elements.feedback.textContent = i18n.t('form.success');
+    elements.formInput.classList.remove('is-invalid');
   }
 };
 
@@ -111,10 +113,12 @@ const renderStatus = (elements, status, i18n) => {
     case 'filling':
       elements.form.focus();
       break;
-    // case 'processing':
-    //   elements.form.readOnly = true;
-    //   elements.form.disabled = true;
-    //   break;
+    case 'processing':
+      elements.form.readOnly = true;
+      elements.form.disabled = true;
+      elements.feedback.textContent = '';
+
+      break;
     case 'success':
       elements.form.readOnly = false;
       elements.form.disabled = false;
@@ -143,17 +147,10 @@ export default (elements, state, i18n) => onChange(state, (path, value) => {
     case 'formState.errors':
       renderError(elements, value, i18n);
       break;
-    case 'formState.valid':
-      if (!value) {
-        elements.formInput.classList.add('is-invalid');
-        return;
-      }
-      elements.formInput.classList.remove('is-invalid');
-      break;
     case 'formState.status':
       renderStatus(elements, value, i18n);
       break;
     default:
-      throw new Error(`Unknown path: ${path}`);
+      break;
   }
 });
