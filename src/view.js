@@ -5,84 +5,85 @@ const renderContainer = (elements, type, i18n) => {
   const container = type === 'feeds' ? feeds : posts;
   container.innerHTML = '';
 
-  const divEl = document.createElement('div');
-  divEl.classList.add('card', 'border-0');
-  container.append(divEl);
+  const card = document.createElement('div');
+  card.classList.add('card', 'border-0');
 
-  const titleDivEl = document.createElement('div');
-  titleDivEl.classList.add('card-body');
-  divEl.append(titleDivEl);
+  const cardBody = document.createElement('div');
+  cardBody.classList.add('card-body');
+  card.append(cardBody);
 
-  const h2 = document.createElement('h2');
-  h2.classList.add('card-title', 'h4');
-  h2.textContent = i18n.t(`${type}Title`);
-  titleDivEl.append(h2);
+  const cardTitle = document.createElement('h2');
+  cardTitle.classList.add('card-title', 'h4');
+  cardTitle.textContent = i18n.t(`${type}Title`);
+  cardBody.append(cardTitle);
 
-  const ulEl = document.createElement('ul');
-  ulEl.classList.add('list-group', 'border-0', 'rounded-0');
-  divEl.append(ulEl);
+  const listGroup = document.createElement('ul');
+  listGroup.classList.add('list-group', 'border-0', 'rounded-0');
+  card.append(listGroup);
 
-  return container;
+  return { container, card, listGroup };
 };
 
 const renderFeeds = (elements, state, i18n) => {
   const view = renderContainer(elements, 'feeds', i18n);
-  const ulEl = view.querySelector('.list-group');
+  const { container, card, listGroup } = view;
 
   state.feeds.forEach((feed) => {
-    const liEl = document.createElement('li');
-    liEl.classList.add('list-group-item', 'border-0', 'border-end-0');
-    ulEl.prepend(liEl);
+    const feedLi = document.createElement('li');
+    feedLi.classList.add('list-group-item', 'border-0', 'border-end-0');
+    listGroup.prepend(feedLi);
 
-    const h3El = document.createElement('h3');
-    h3El.classList.add('h6', 'm-0');
-    h3El.textContent = feed.title;
-    liEl.append(h3El);
+    const feedTitle = document.createElement('h3');
+    feedTitle.classList.add('h6', 'm-0');
+    feedTitle.textContent = feed.title;
+    feedLi.append(feedTitle);
 
-    const pEl = document.createElement('p');
-    pEl.classList.add('m-0', 'small', 'text-black-50');
-    pEl.textContent = feed.description;
-    liEl.append(pEl);
+    const feedDescription = document.createElement('p');
+    feedDescription.classList.add('m-0', 'small', 'text-black-50');
+    feedDescription.textContent = feed.description;
+    feedLi.append(feedDescription);
   });
+  container.append(card);
 };
 
 const renderPosts = (elements, state, i18n) => {
   const view = renderContainer(elements, 'posts', i18n);
-  const ulEl = view.querySelector('.list-group');
+  const { container, card, listGroup } = view;
 
   state.posts.forEach((post) => {
-    const liEl = document.createElement('li');
-    liEl.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-start', 'border-0', 'border-end-0');
-    ulEl.prepend(liEl);
+    const postLi = document.createElement('li');
+    postLi.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-start', 'border-0', 'border-end-0');
+    listGroup.prepend(postLi);
 
-    const fwClass = state.uiState.visitedPosts.has(post.id) ? ['fw-normal', 'link-secondary'] : ['fw-bold'];
-    const aEl = document.createElement('a');
-    aEl.setAttribute('href', post.url);
-    aEl.classList.add(...fwClass);
-    aEl.setAttribute('data-id', post.id);
-    aEl.setAttribute('target', '_blank');
-    aEl.setAttribute('rel', 'noopener noreferrer');
-    aEl.textContent = post.title;
+    const fwClass = state.ui.visitedPosts.has(post.id) ? ['fw-normal', 'link-secondary'] : ['fw-bold'];
+    const postTitle = document.createElement('a');
+    postTitle.setAttribute('href', post.url);
+    postTitle.classList.add(...fwClass);
+    postTitle.setAttribute('data-id', post.id);
+    postTitle.setAttribute('target', '_blank');
+    postTitle.setAttribute('rel', 'noopener noreferrer');
+    postTitle.textContent = post.title;
 
-    const btnEl = document.createElement('button');
-    btnEl.setAttribute('type', 'button');
-    btnEl.classList.add('btn', 'btn-outline-primary', 'btn-sm');
-    btnEl.setAttribute('data-id', post.id);
-    btnEl.setAttribute('data-bs-toggle', 'modal');
-    btnEl.setAttribute('data-bs-target', '#modal');
-    btnEl.textContent = i18n.t('postsButton');
+    const postBtn = document.createElement('button');
+    postBtn.setAttribute('type', 'button');
+    postBtn.classList.add('btn', 'btn-outline-primary', 'btn-sm');
+    postBtn.setAttribute('data-id', post.id);
+    postBtn.setAttribute('data-bs-toggle', 'modal');
+    postBtn.setAttribute('data-bs-target', '#modal');
+    postBtn.textContent = i18n.t('postsButton');
 
-    liEl.append(aEl, btnEl);
+    postLi.append(postTitle, postBtn);
   });
+  container.append(card);
 };
 
-const renderVisitedPosts = (elements, state) => {
-  const postsId = [...state.uiState.visitedPosts];
+const renderModal = (elements, state) => {
+  const postsId = [...state.ui.visitedPosts];
   const currentId = postsId[postsId.length - 1];
   const currentUrl = document.querySelector(`a[data-id=${currentId}]`);
 
   currentUrl.classList.remove('fw-bold');
-  currentUrl.classList.add('fw-normal');
+  currentUrl.classList.add('fw-normal', 'link-secondary');
 
   const currentPost = state.posts.find((post) => post.id === currentId);
 
@@ -136,8 +137,8 @@ export default (elements, state, i18n) => onChange(state, (path, value) => {
     case 'posts':
       renderPosts(elements, state, i18n);
       break;
-    case 'uiState.visitedPosts':
-      renderVisitedPosts(elements, state);
+    case 'ui.visitedPosts':
+      renderModal(elements, state);
       break;
     case 'formState.errors':
       renderError(elements, value, i18n);

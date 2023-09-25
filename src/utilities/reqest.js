@@ -3,6 +3,7 @@ import _ from 'lodash';
 import parseData from './parser.js';
 
 const axiosTimeout = 10000;
+const updatePostsTimeout = 5000;
 
 export const getProxy = (url) => {
   const proxyUrl = new URL('https://allorigins.hexlet.app');
@@ -40,15 +41,15 @@ export const rssDownload = (url, state) => {
 };
 
 export const rssUpdate = (state) => {
-  const { feeds, posts } = state;
+  const { feeds } = state;
   const activeFeeds = feeds.map((feed) => fetchData(getProxy(feed.url))
     .then(({ data }) => {
-      const newData = parseData(data.contents);
-      const currentPosts = posts.map((post) => post.url);
-      const newPosts = newData.posts
-        .filter((post) => !currentPosts.includes(post.url))
+      const { posts } = parseData(data.contents);
+      const currentUrls = posts.map((post) => post.url);
+      const newPosts = posts
+        .filter((post) => !currentUrls.includes(post.url))
         .map((post) => ({ ...post, feedId: feed.id, id: _.uniqueId('post') }));
       posts.push(...newPosts);
     }));
-  Promise.all(activeFeeds).finally(() => setTimeout(rssUpdate, 5000, state));
+  Promise.all(activeFeeds).finally(() => setTimeout(rssUpdate, updatePostsTimeout, state));
 };

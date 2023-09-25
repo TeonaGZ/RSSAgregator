@@ -29,7 +29,7 @@ export default () => {
     },
     feeds: [],
     posts: [],
-    uiState: {
+    ui: {
       visitedPosts: new Set(),
     },
   };
@@ -71,7 +71,7 @@ export default () => {
       elements.posts.addEventListener('click', ({ target }) => {
         if (target.hasAttribute('data-id')) {
           const { id } = target.dataset;
-          watchedState.uiState.visitedPosts.add(id);
+          watchedState.ui.visitedPosts.add(id);
         }
       });
       rssUpdate(watchedState);
