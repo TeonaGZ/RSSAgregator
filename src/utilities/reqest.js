@@ -2,38 +2,22 @@ import axios from 'axios';
 import _ from 'lodash';
 import parseData from './parser.js';
 
+const axiosTimeout = 10000;
+
 export const getProxy = (url) => {
   const proxyUrl = new URL('https://allorigins.hexlet.app');
   proxyUrl.pathname = 'get';
   proxyUrl.searchParams.set('disableCache', 'true');
   proxyUrl.searchParams.set('url', `${url}`);
-  return proxyUrl;
+  return proxyUrl.toString();
 };
 
-// export const parseData = (data) => {
-//   const parser = new DOMParser();
-//   const parsedXmlString = parser.parseFromString(data, 'application/xml');
-//   const errorNode = parsedXmlString.querySelector('parsererror');
-//   if (errorNode) {
-//     throw new Error('notValidRss');
-//   }
-
-//   const feed = {
-//     title: parsedXmlString.querySelector('channel > title').textContent,
-//     description: parsedXmlString.querySelector('channel > description').textContent,
-//   };
-//   const posts = Array.from(parsedXmlString.querySelectorAll('channel > item'))
-//     .map((item) => (
-//       {
-//         title: item.querySelector('title').textContent,
-//         description: item.querySelector('description').textContent,
-//         url: item.querySelector('link').textContent,
-//       }
-//     ));
-//   return { feed, posts };
-// };
-
-export const fetchData = (proxyUrl) => axios.get(proxyUrl);
+export const fetchData = (proxyUrl) => {
+  const instance = axios.create();
+  return instance.get(proxyUrl, {
+    timeout: axiosTimeout,
+  });
+};
 
 export const rssDownload = (url, state) => {
   const proxyUrl = getProxy(url);
