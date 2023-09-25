@@ -4,8 +4,7 @@ import customMessages from './locales/customMessage.js';
 import ru from './locales/ru.js';
 import validateUrl from './utilities/validator.js';
 import watch from './view.js';
-import updatePosts from './utilities/updater.js';
-import rssDownload from './utilities/rssDownload.js';
+import { rssDownload, rssUpdate } from './utilities/reqest.js';
 
 export default () => {
   const elements = {
@@ -75,6 +74,6 @@ export default () => {
           watchedState.uiState.visitedPosts.add(id);
         }
       });
-      updatePosts(watchedState);
+      rssUpdate(watchedState);
     });
 };
