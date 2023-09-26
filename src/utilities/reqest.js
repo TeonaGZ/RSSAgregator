@@ -37,7 +37,13 @@ export const rssDownload = (url, state) => {
     .catch((error) => {
       state.formState.status = 'filling';
       state.formState.valid = false;
-      state.formState.errors = error.message;
+      if (axios.isAxiosError(error)) {
+        state.formState.errors = 'Network Error';
+      } else if (error.isParseError) {
+        state.formState.errors = 'notValidRss';
+      } else {
+        state.formState.errors = 'unknownError';
+      }
     });
 };
 

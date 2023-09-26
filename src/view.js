@@ -80,11 +80,6 @@ const renderPosts = (elements, state, i18n) => {
 const renderModal = (elements, state) => {
   const postsId = [...state.ui.visitedPosts];
   const currentId = postsId[postsId.length - 1];
-  const currentUrl = document.querySelector(`a[data-id=${currentId}]`);
-
-  currentUrl.classList.remove('fw-bold');
-  currentUrl.classList.add('fw-normal', 'link-secondary');
-
   const currentPost = state.posts.find((post) => post.id === currentId);
 
   const { title, description, url } = currentPost;
@@ -95,16 +90,18 @@ const renderModal = (elements, state) => {
   modal.btn.setAttribute('href', url);
 };
 
-const renderError = (elements, value, i18n) => {
+const renderError = (elements, error, i18n) => {
   elements.feedback.textContent = '';
-  if (value !== null) {
+  if (error) {
     elements.feedback.classList.remove('text-success');
     elements.feedback.classList.add('text-danger');
-    elements.feedback.textContent = i18n.t(`form.errors.${value}`);
+    elements.feedback.textContent = i18n.t(`form.errors.${error}`);
     elements.formInput.classList.add('is-invalid');
-  } else {
-    elements.feedback.textContent = i18n.t('form.success');
-    elements.formInput.classList.remove('is-invalid');
+  // } else {
+  //   elements.feedback.classList.remove('text-danger');
+  //   elements.feedback.classList.add('text-success');
+  //   elements.feedback.textContent = i18n.t('form.success');
+  //   elements.formInput.classList.remove('is-invalid');
   }
 };
 
@@ -127,6 +124,7 @@ const renderStatus = (elements, status, i18n) => {
       elements.feedback.classList.remove('text-danger');
       elements.feedback.classList.add('text-success');
       elements.feedback.textContent = i18n.t('form.success');
+      elements.formInput.classList.remove('is-invalid');
       break;
     default:
       throw new Error(`Unknown process state: ${status}`);
@@ -142,6 +140,7 @@ export default (elements, state, i18n) => onChange(state, (path, value) => {
       renderPosts(elements, state, i18n);
       break;
     case 'ui.visitedPosts':
+      renderPosts(elements, state, i18n);
       renderModal(elements, state);
       break;
     case 'formState.errors':

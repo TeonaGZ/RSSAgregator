@@ -3,7 +3,9 @@ const parseData = (data) => {
   const parsedXmlString = parser.parseFromString(data, 'application/xml');
   const errorNode = parsedXmlString.querySelector('parsererror');
   if (errorNode) {
-    throw new Error('notValidRss');
+    const error = new Error('notValidRss');
+    error.isParseError = true;
+    throw error;
   }
 
   const feed = {
