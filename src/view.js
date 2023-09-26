@@ -1,8 +1,9 @@
 import onChange from 'on-change';
 
 const renderContainer = (elements, type, i18n) => {
-  const { feeds, posts } = elements;
-  const container = type === 'feeds' ? feeds : posts;
+  const container = elements[type];
+  if (!container) return undefined;
+
   container.innerHTML = '';
 
   const card = document.createElement('div');
