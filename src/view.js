@@ -1,10 +1,7 @@
 import onChange from 'on-change';
 
-const renderContainer = (elements, type, i18n) => {
-  const container = elements[type];
-  if (!container) return undefined;
-
-  container.innerHTML = '';
+const renderFeeds = (elements, state, i18n) => {
+  elements.feeds.innerHTML = '';
 
   const card = document.createElement('div');
   card.classList.add('card', 'border-0');
@@ -15,19 +12,12 @@ const renderContainer = (elements, type, i18n) => {
 
   const cardTitle = document.createElement('h2');
   cardTitle.classList.add('card-title', 'h4');
-  cardTitle.textContent = i18n.t(`${type}Title`);
+  cardTitle.textContent = i18n.t('feedsTitle');
   cardBody.append(cardTitle);
 
   const listGroup = document.createElement('ul');
   listGroup.classList.add('list-group', 'border-0', 'rounded-0');
   card.append(listGroup);
-
-  return { container, card, listGroup };
-};
-
-const renderFeeds = (elements, state, i18n) => {
-  const view = renderContainer(elements, 'feeds', i18n);
-  const { container, card, listGroup } = view;
 
   state.feeds.forEach((feed) => {
     const feedLi = document.createElement('li');
@@ -44,12 +34,27 @@ const renderFeeds = (elements, state, i18n) => {
     feedDescription.textContent = feed.description;
     feedLi.append(feedDescription);
   });
-  container.append(card);
+  elements.feeds.append(card);
 };
 
 const renderPosts = (elements, state, i18n) => {
-  const view = renderContainer(elements, 'posts', i18n);
-  const { container, card, listGroup } = view;
+  elements.posts.innerHTML = '';
+
+  const card = document.createElement('div');
+  card.classList.add('card', 'border-0');
+
+  const cardBody = document.createElement('div');
+  cardBody.classList.add('card-body');
+  card.append(cardBody);
+
+  const cardTitle = document.createElement('h2');
+  cardTitle.classList.add('card-title', 'h4');
+  cardTitle.textContent = i18n.t('postsTitle');
+  cardBody.append(cardTitle);
+
+  const listGroup = document.createElement('ul');
+  listGroup.classList.add('list-group', 'border-0', 'rounded-0');
+  card.append(listGroup);
 
   state.posts.forEach((post) => {
     const postLi = document.createElement('li');
@@ -75,7 +80,7 @@ const renderPosts = (elements, state, i18n) => {
 
     postLi.append(postTitle, postBtn);
   });
-  container.append(card);
+  elements.posts.append(card);
 };
 
 const renderModal = (elements, state) => {
@@ -98,11 +103,6 @@ const renderError = (elements, error, i18n) => {
     elements.feedback.classList.add('text-danger');
     elements.feedback.textContent = i18n.t(`form.errors.${error}`);
     elements.formInput.classList.add('is-invalid');
-  // } else {
-  //   elements.feedback.classList.remove('text-danger');
-  //   elements.feedback.classList.add('text-success');
-  //   elements.feedback.textContent = i18n.t('form.success');
-  //   elements.formInput.classList.remove('is-invalid');
   }
 };
 
@@ -110,6 +110,7 @@ const renderStatus = (elements, status, i18n) => {
   switch (status) {
     case 'filling':
       elements.form.focus();
+      elements.formInput.classList.remove('is-invalid');
       break;
     case 'processing':
       elements.form.readOnly = true;
