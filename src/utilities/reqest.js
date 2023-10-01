@@ -32,10 +32,12 @@ export const rssDownload = (url, state) => {
 
       state.feeds.push(newFeed);
       state.posts.push(...newPosts);
+      state.formState.isValid = true;
       state.formState.status = 'success';
     })
     .catch((error) => {
       state.formState.status = 'filling';
+      state.formState.isValid = false;
       if (axios.isAxiosError(error)) {
         state.formState.errors = 'Network Error';
       } else if (error.isParseError) {

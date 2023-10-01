@@ -99,10 +99,21 @@ const renderModal = (elements, state) => {
 const renderError = (elements, error, i18n) => {
   elements.feedback.textContent = '';
   if (error) {
+    elements.feedback.textContent = i18n.t(`form.errors.${error}`);
+  }
+};
+
+const renderFeedback = (elements, state, isValid, i18n) => {
+  elements.feedback.textContent = '';
+  if (isValid === false) {
     elements.feedback.classList.remove('text-success');
     elements.feedback.classList.add('text-danger');
-    elements.feedback.textContent = i18n.t(`form.errors.${error}`);
+    elements.feedback.textContent = i18n.t(`form.errors.${state.formState.errors}`);
     elements.formInput.classList.add('is-invalid');
+  } else {
+    elements.formInput.classList.remove('is-invalid');
+    elements.feedback.textContent = '';
+    elements.feedback.classList.remove('text-danger');
   }
 };
 
@@ -110,23 +121,18 @@ const renderStatus = (elements, status, i18n) => {
   switch (status) {
     case 'filling':
       elements.form.focus();
-      elements.formInput.classList.remove('is-invalid');
       break;
     case 'processing':
       elements.form.readOnly = true;
       elements.form.disabled = true;
-      elements.feedback.textContent = '';
-
       break;
     case 'success':
       elements.form.readOnly = false;
       elements.form.disabled = false;
       elements.form.reset();
       elements.form.focus();
-      elements.feedback.classList.remove('text-danger');
       elements.feedback.classList.add('text-success');
       elements.feedback.textContent = i18n.t('form.success');
-      elements.formInput.classList.remove('is-invalid');
       break;
     default:
       throw new Error(`Unknown process state: ${status}`);
@@ -147,6 +153,9 @@ export default (elements, state, i18n) => onChange(state, (path, value) => {
       break;
     case 'formState.errors':
       renderError(elements, value, i18n);
+      break;
+    case 'formState.isValid':
+      renderFeedback(elements, state, value, i18n);
       break;
     case 'formState.status':
       renderStatus(elements, value, i18n);

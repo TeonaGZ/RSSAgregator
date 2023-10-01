@@ -25,6 +25,7 @@ export default () => {
     formState: {
       status: 'filling',
       errors: null,
+      isValid: true,
     },
     feeds: [],
     posts: [],
@@ -56,11 +57,14 @@ export default () => {
 
         validateUrl(url, urlList)
           .then((error) => {
+            watchedState.formState.isValid = null;
             if (error !== null) {
               watchedState.formState.errors = error;
+              watchedState.formState.isValid = false;
               return;
             }
             watchedState.formState.errors = null;
+            watchedState.formState.isValid = true;
             rssDownload(url, watchedState);
           });
       });
